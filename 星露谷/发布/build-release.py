@@ -18,6 +18,7 @@ import json
 import os
 import re
 import shutil
+import stat
 import sys
 import time
 import zipfile
@@ -154,10 +155,18 @@ def stage_dir_for(version):
     return os.path.join(STAGE_ROOT, "【星露谷整合包】v%s" % version)
 
 
+def _rmtree_force(path):
+    """删目录树（容错只读文件——Mods 源里有只读项，copytree 会保留属性）。"""
+    def clear(func, target, exc):
+        os.chmod(target, stat.S_IWRITE)
+        func(target)
+    shutil.rmtree(path, onexc=clear)
+
+
 def assemble(version, rows):
     stage = stage_dir_for(version)
     if os.path.isdir(stage):
-        shutil.rmtree(stage)
+        _rmtree_force(stage)
     mods_dst = os.path.join(stage, "MODS")
     smapi_dst = os.path.join(stage, os.path.basename(SMAPI_DIR))
     print("复制 Mods -> MODS ...")
