@@ -1,0 +1,15 @@
+# 大文件/压缩包永不入库
+*.zip
+*.7z
+*.rar
+
+# 组装暂存与生成物
+星露谷/发布/stage/
+星露谷/发布/输出/
+__pycache__/
+*.pyc
+
+# 系统杂项
+Thumbs.db
+desktop.ini
+.DS_Store
